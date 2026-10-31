@@ -1,0 +1,30 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        include:
+          - name: release
+            flags: ""
+            type: Release
+          - name: tsan
+            flags: "-fsanitize=thread -g"
+            type: RelWithDebInfo
+          - name: asan
+            flags: "-fsanitize=address,undefined -g"
+            type: RelWithDebInfo
+    name: ${{ matrix.name }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.type }} -DCMAKE_CXX_FLAGS="${{ matrix.flags }}"
+      - name: Build
+        run: cmake --build build -j
+      - name: Smoke run
+        run: ./build/server --port 8080 --threads 2
