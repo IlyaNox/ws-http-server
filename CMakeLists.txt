@@ -11,6 +11,10 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 endif()
 
 find_package(Threads REQUIRED)
+add_library(store src/store/store.cpp)
+target_include_directories(store PUBLIC ${PROJECT_SOURCE_DIR}/src)
+target_compile_options(store PRIVATE -Wall -Wextra -Wpedantic)
+target_link_libraries(store PUBLIC Threads::Threads)
 
 add_executable(server src/main.cpp)
 target_compile_options(server PRIVATE -Wall -Wextra -Wpedantic)
