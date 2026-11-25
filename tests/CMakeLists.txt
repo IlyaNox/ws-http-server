@@ -18,3 +18,8 @@ add_executable(parser_tests parser_test.cpp)
 target_compile_options(parser_tests PRIVATE -Wall -Wextra -Wpedantic)
 target_link_libraries(parser_tests PRIVATE http GTest::gtest_main)
 gtest_discover_tests(parser_tests)
+
+add_executable(router_tests router_test.cpp)
+target_compile_options(router_tests PRIVATE -Wall -Wextra -Wpedantic)
+target_link_libraries(router_tests PRIVATE api GTest::gtest_main)
+gtest_discover_tests(router_tests)
