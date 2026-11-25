@@ -1,1 +1,25 @@
-# Появится в v0.2 (unit-тесты парсера и хранилища).
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/tags/v1.15.2.tar.gz
+  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
+set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+include(GoogleTest)
+
+add_executable(store_tests store_test.cpp)
+target_compile_options(store_tests PRIVATE -Wall -Wextra -Wpedantic)
+target_link_libraries(store_tests PRIVATE store GTest::gtest_main)
+gtest_discover_tests(store_tests)
+
+add_executable(parser_tests parser_test.cpp)
+target_compile_options(parser_tests PRIVATE -Wall -Wextra -Wpedantic)
+target_link_libraries(parser_tests PRIVATE http GTest::gtest_main)
+gtest_discover_tests(parser_tests)
+
+add_executable(router_tests router_test.cpp)
+target_compile_options(router_tests PRIVATE -Wall -Wextra -Wpedantic)
+target_link_libraries(router_tests PRIVATE api GTest::gtest_main)
+gtest_discover_tests(router_tests)

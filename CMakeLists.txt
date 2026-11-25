@@ -12,11 +12,33 @@ endif()
 
 find_package(Threads REQUIRED)
 
+include(FetchContent)
+FetchContent_Declare(
+  json
+  URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
+  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
+FetchContent_MakeAvailable(json)
+
+add_library(store src/store/store.cpp)
+target_include_directories(store PUBLIC ${PROJECT_SOURCE_DIR}/src)
+target_compile_options(store PRIVATE -Wall -Wextra -Wpedantic)
+target_link_libraries(store PUBLIC Threads::Threads)
+
+add_library(http src/http/parser.cpp src/http/response.cpp)
+target_include_directories(http PUBLIC ${PROJECT_SOURCE_DIR}/src)
+target_compile_options(http PRIVATE -Wall -Wextra -Wpedantic)
+
+add_library(api src/api/router.cpp)
+target_include_directories(api PUBLIC ${PROJECT_SOURCE_DIR}/src)
+target_compile_options(api PRIVATE -Wall -Wextra -Wpedantic)
+target_link_libraries(api PUBLIC http store nlohmann_json::nlohmann_json)
+
 add_executable(server src/main.cpp)
 target_compile_options(server PRIVATE -Wall -Wextra -Wpedantic)
-target_link_libraries(server PRIVATE Threads::Threads)
+target_link_libraries(server PRIVATE api http store Threads::Threads)
 
-# Тесты (появятся в v0.2): cmake -B build -DBUILD_TESTING=ON
+# Тесты: cmake -B build -DBUILD_TESTING=ON
 option(BUILD_TESTING "Build unit tests" OFF)
 if(BUILD_TESTING)
   enable_testing()
