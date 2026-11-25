@@ -13,3 +13,8 @@ add_executable(store_tests store_test.cpp)
 target_compile_options(store_tests PRIVATE -Wall -Wextra -Wpedantic)
 target_link_libraries(store_tests PRIVATE store GTest::gtest_main)
 gtest_discover_tests(store_tests)
+
+add_executable(parser_tests parser_test.cpp)
+target_compile_options(parser_tests PRIVATE -Wall -Wextra -Wpedantic)
+target_link_libraries(parser_tests PRIVATE http GTest::gtest_main)
+gtest_discover_tests(parser_tests)
